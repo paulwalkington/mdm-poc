@@ -27,10 +27,44 @@ resource "aws_ecs_task_definition" "app" {
           "awslogs-stream-prefix": "ecs"
         }
     },
+    "environment" = [
+        {
+          name  = "XDM_REPOSITORY_DRIVER"
+          value = "org.postgresql.Driver"
+        },
+                {
+          name  = "XDM_REPOSITORY_URL"
+          value = "jdbc:postgresql://${aws_rds_cluster_instance.cluster_instances.endpoint}:5432/${aws_rds_cluster.aurora_postgres.database_name}"
+        },
+        {
+          name  = "XDM_REPOSITORY_USERNAME"
+          value = "semarchy_repository"
+        },
+        {
+          name  = "XDM_REPOSITORY_PASSWORD"
+          value = "semarchy_repository"
+        },
+        {
+          name  = "XDM_REPOSITORY_READONLY_USERNAME"
+          value = "semarchy_repository_ro"
+        },
+        {
+          name  = "XDM_REPOSITORY_READONLY_PASSWORD"
+          value = "semarchy_repository_ro"
+        },
+        {
+          name  = "SEMARCHY_SETUP_TOKEN"
+          value = "mySecretValue"
+        },
+        {
+          name  = "CONTEXT_PATH"
+          value = "/semarchy"
+        }
+      ],
     "portMappings": [
       {
-        "containerPort": var.app_port,
-        "hostPort": var.app_port
+        "containerPort": 80,
+        "hostPort": 80
       }
     ]
   }
